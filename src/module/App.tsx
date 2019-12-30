@@ -25,6 +25,7 @@ import UserInfoPage from "../pages/Admin/InfoUser";
 import ListProductsPage from "../pages/Product/Products";
 import AddProductPage from "../pages/Product/AddProduct";
 import ProductInfoPage from "../pages/Product/Info";
+import Snowfall from "react-snowfall";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -152,6 +153,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           }}
           collapsed={true}
         >
+          <Snowfall snowflakeCount={20} />
           <Typography.Title
             style={{
               margin: '0.4em auto',

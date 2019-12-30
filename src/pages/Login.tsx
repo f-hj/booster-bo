@@ -3,6 +3,7 @@ import { Layout, Row, Col, Button, Input, Divider, Icon, Form, notification, Typ
 import { FormComponentProps } from "antd/lib/form";
 import Store from "../module/Store";
 import { RouteComponentProps } from "react-router-dom";
+import Snowfall from 'react-snowfall'
 
 interface LoginProps extends FormComponentProps, RouteComponentProps<any> {}
 interface LoginState {
@@ -24,6 +25,7 @@ class TLogin extends React.Component<LoginProps, LoginState> {
           backgroundImage: 'linear-gradient(to top, #f43b47 0%, #453a94 100%)',
         }}
       >
+        <Snowfall />
         <Layout.Content style={{ flex: "1 1 auto", display: "flex" }}>
           <Row
             type="flex"
