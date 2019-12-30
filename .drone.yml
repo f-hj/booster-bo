@@ -12,6 +12,11 @@ steps:
     PLUGIN_REPO: docker-registry.fruitice.fr/booster-bo
     PLUGIN_REGISTRY: docker-registry.fruitice.fr
     PLUGIN_TAG: ${DRONE_COMMIT}
+    BOOSTER_JS_PULL_KEY:
+      from_secret: booster_js_pull_key
+  settings:
+    build_args_from_env:
+      - BOOSTER_JS_PULL_KEY
   privileged: true
   when:
     branch: master

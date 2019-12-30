@@ -4,6 +4,11 @@ WORKDIR /app
 COPY package.json .
 COPY yarn.lock .
 
+# add credentials on build
+ARG BOOSTER_JS_PULL_KEY
+RUN mkdir /root/.ssh/
+RUN echo "${BOOSTER_JS_PULL_KEY}" > /root/.ssh/id_rsa
+
 RUN yarn
 
 COPY . .
