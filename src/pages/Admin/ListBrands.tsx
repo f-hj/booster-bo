@@ -3,12 +3,14 @@ import { Layout, Menu, Breadcrumb, Icon, Form, Typography, Input, Button, notifi
 import { FormComponentProps } from "antd/lib/form";
 import Store from "../../module/Store";
 import { Brand } from "booster-js-client";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
+import SpanId from "../../components/SpanId";
+import TableBrands from "../../components/TableBrands";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-interface ListBrandsAdminPageProps {}
+interface ListBrandsAdminPageProps extends RouteComponentProps<any> {}
 interface ListBrandsAdminPageState {
   loading: boolean
   brands?: Brand[]
@@ -36,50 +38,6 @@ export default class ListBrandsAdminPage extends React.Component<ListBrandsAdmin
       })
   }
 
-  private columns = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Created at',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-    },
-    {
-      title: 'Users',
-      dataIndex: 'users',
-      key: 'users',
-    },
-    {
-      title: 'Verified',
-      dataIndex: 'verified',
-      key: 'verified',
-      render: (_: any, brand: Brand) => {
-        return (
-          <Icon type="close-circle" theme="twoTone" twoToneColor="#ff0000" />
-        )
-      }
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_: any, brand: Brand) => {
-        return (
-          <span>
-            <Link to={`/brand/info/${brand.id}`}>Edit</Link>
-          </span>
-        )
-      }
-    }
-  ]
-
   public componentWillMount() {
     if (!this.state.brands) {
       this.fetchBrands()
@@ -99,10 +57,10 @@ export default class ListBrandsAdminPage extends React.Component<ListBrandsAdmin
             </Typography.Text>
             <div style={{marginTop: '2em'}} />
 
-            <Table
+            <TableBrands
+              {...this.props}
               loading={this.state.loading}
-              columns={this.columns}
-              dataSource={this.state.brands}
+              brands={this.state.brands}
             />
             
           </div>

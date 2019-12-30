@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Row, Col, Button, Input, Divider, Icon, Form, notification } from "antd";
+import { Layout, Row, Col, Button, Input, Divider, Icon, Form, notification, Typography } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import Store from "../module/Store";
 import { RouteComponentProps } from "react-router-dom";
@@ -20,7 +20,8 @@ class TLogin extends React.Component<LoginProps, LoginState> {
         style={{
           height: "100vh",
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
+          backgroundImage: 'linear-gradient(to top, #f43b47 0%, #453a94 100%)',
         }}
       >
         <Layout.Content style={{ flex: "1 1 auto", display: "flex" }}>
@@ -45,8 +46,7 @@ class TLogin extends React.Component<LoginProps, LoginState> {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                overflow: "hidden",
-                borderRadius: "4px"
+                overflow: "hidden"
               }}
             >
               <h1 style={{ marginTop: 16, marginBottom: 24 }}>Booster</h1>
@@ -144,9 +144,6 @@ class TLogin extends React.Component<LoginProps, LoginState> {
             </Col>
           </Row>
         </Layout.Content>
-        <Layout.Footer
-          style={{ textAlign: "center", flex: "0 0 auto" }}
-        ></Layout.Footer>
       </Layout>
     );
   }

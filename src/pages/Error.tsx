@@ -7,10 +7,6 @@ interface ErrorPageProps extends RouteComponentProps<any> {
 
 export default class ErrorPage extends React.Component<ErrorPageProps> {
   render () {
-    notification.error({
-      message: 'Not found',
-      description: `The page ${this.props.location.pathname} cannot be found`,
-    })
     return (
       <Layout.Content style={{ margin: '0 16px' }}>
         <Result

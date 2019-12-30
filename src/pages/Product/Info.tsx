@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout, Menu, Breadcrumb, Icon, Typography, notification, Skeleton, Button, Timeline } from 'antd';
 import { RouteComponentProps } from 'react-router-dom';
-import { Brand, Log } from 'booster-js-client';
+import { Product, Log } from 'booster-js-client';
 import store from '../../module/Store';
 import ModalAddUser from '../../components/ModalAddUser';
 import TableUsers from '../../components/TableUsers';
@@ -12,33 +12,28 @@ import queryString from 'query-string'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-interface BrandInfoPageProps extends RouteComponentProps<any> {}
+interface ProductInfoPageProps extends RouteComponentProps<any> {}
 
-interface BrandInfoPageState {
+interface ProductInfoPageState {
   loading: boolean
-  brand?: Brand
+  product?: Product
   logs?: Log[]
-
-  modalAddUser: boolean
-  addUserLoading: boolean
 }
 
-export default class BrandInfoPage extends React.Component<BrandInfoPageProps, BrandInfoPageState> {
-  public state: BrandInfoPageState = {
+export default class ProductInfoPage extends React.Component<ProductInfoPageProps, ProductInfoPageState> {
+  public state: ProductInfoPageState = {
     loading: true,
-    modalAddUser: false,
-    addUserLoading: false,
   }
 
   async componentWillMount () {
-    const brandId: string = queryString.parse(this.props.location.search).brand as string
-    if (!brandId) {
+    const productId: string = queryString.parse(this.props.location.search).product as string
+    if (!productId) {
       return
     }
-    store.api.brands.getBrandLogs(brandId)
+    store.api.products.getProductLogs(productId)
       .then(res => {
         this.setState({
-          brand: res.data.brand,
+          product: res.data.product,
           logs: res.data.logs,
         })
       })
@@ -58,7 +53,7 @@ export default class BrandInfoPage extends React.Component<BrandInfoPageProps, B
         <div>
           <Content style={{ margin: '0 16px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>Brand info</Breadcrumb.Item>
+              <Breadcrumb.Item>Products</Breadcrumb.Item>
             </Breadcrumb>
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
               <Skeleton active />
@@ -72,26 +67,16 @@ export default class BrandInfoPage extends React.Component<BrandInfoPageProps, B
       <div>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Brand info</Breadcrumb.Item>
+            <Breadcrumb.Item>Products</Breadcrumb.Item>
+            <Breadcrumb.Item>{this.state.product?.name}</Breadcrumb.Item>
           </Breadcrumb>
           <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
-            <Typography.Title editable={true}>{this.state.brand?.name}</Typography.Title>
+            <Typography.Title editable={true}>{this.state.product?.name}</Typography.Title>
+            <Typography.Paragraph editable={true}>{this.state.product?.description}</Typography.Paragraph>
           </div>
           <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
-            <Typography.Title level={4}>Users</Typography.Title>
-            <TableUsers
-              light={true}
-              loading={this.state.loading}
-              users={this.state.brand?.users}
-            />
+            <Typography.Title level={4}>Models</Typography.Title>
             <p></p>
-            <Button
-              onClick={() => this.setState({ modalAddUser: true })}
-              loading={this.state.addUserLoading}
-            >
-              <Icon type="plus" />
-              Invite user
-            </Button>
           </div>
           <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
             <Typography.Title level={4}>Timeline</Typography.Title>
@@ -102,9 +87,9 @@ export default class BrandInfoPage extends React.Component<BrandInfoPageProps, B
             store.currentUser?.isAdmin ? 
               <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
                 <Typography.Title level={3}>Admin debug</Typography.Title>
-                <Typography.Title level={4}>Brand</Typography.Title>
+                <Typography.Title level={4}>Product</Typography.Title>
                 <pre>
-                  {JSON.stringify(this.state.brand, null, 2)}
+                  {JSON.stringify(this.state.product, null, 2)}
                 </pre>
 
                 <Typography.Title level={4}>Logs</Typography.Title>
@@ -115,29 +100,6 @@ export default class BrandInfoPage extends React.Component<BrandInfoPageProps, B
             : null
           }
         </Content>
-
-        <ModalAddUser
-          visible={this.state.modalAddUser}
-          onSubmit={(email) => {
-            this.setState({
-              modalAddUser: false,
-              addUserLoading: true,
-            })
-
-            store.api.brands.inviteUser(this.state.brand?.id!, {
-              email,
-            }).then((res) => {
-              this.setState({ brand: res.data.brand })
-            }).catch((err) => {
-              notification.error({
-                message: err.response.data.errors
-              })
-            }).finally(() => {
-              this.setState({ addUserLoading: false })
-            })
-          }}
-          onCancel={() => this.setState({ modalAddUser: false })}
-        />
       </div>
     )
   }

@@ -1,14 +1,16 @@
 import { action, computed, observable } from 'mobx'
-import { UsersApi, BrandsApi, Configuration, User, Brand } from 'booster-js-client'
+import { UsersApi, BrandsApi, Configuration, User, Brand, ProductsApi } from 'booster-js-client'
 
 class ApiSet {
   brands: BrandsApi
   users: UsersApi
+  products: ProductsApi
 
   constructor () {
     // init with empty config to avoid nullable types
     this.brands = new BrandsApi()
     this.users = new UsersApi()
+    this.products = new ProductsApi()
 
     // then with re-initable parameters
     this.init()
@@ -20,25 +22,45 @@ class ApiSet {
     }
     this.brands = new BrandsApi(config)
     this.users = new UsersApi(config)
+    this.products = new ProductsApi(config)
   }
 }
 
 class Store {
-  @observable currentUser?: User
-  @computed get user () {
+  @observable
+  currentUser?: User
+
+  @computed
+  get user () {
     if (!this.currentUser) {
       this.fetchUser()
     }
     return this.currentUser
   }
-  @action async fetchUser () {
+
+  @action
+  async fetchUser () {
     const res = await this.api.users.getMyself()
     this.currentUser = res.data.user
+    this.currentBrands = res.data.user?.brands
+    if (res.data.user?.brands && res.data.user?.brands.length > 0) {
+      this.currentBrandId = res.data.user?.brands[0].id
+    }
     return this.currentUser
   }
 
+  @observable
+  currentBrandId?: string
+  @computed
+  get currentBrand () {
+    return this.currentBrands?.filter(brand => brand.id === this.currentBrandId)[0]
+  }
+
+  @observable
   currentBrands?: Brand[]
-  @action async getBrands () {
+
+  @action
+  async getBrands () {
     if (this.currentBrands) {
       return this.currentBrands
     }

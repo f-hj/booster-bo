@@ -4,6 +4,8 @@ import { FormComponentProps } from "antd/lib/form";
 import Store from "../../module/Store";
 import { User } from "booster-js-client";
 import { Link } from "react-router-dom";
+import SpanId from "../../components/SpanId";
+import TableUsers from "../../components/TableUsers";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -36,34 +38,6 @@ export default class ListUsersAdminPage extends React.Component<ListUsersAdminPa
       })
   }
 
-  private columns = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_: any, user: User) => {
-        return (
-          <span>
-            <Link to={`/admin/users/${user.id}`}>Edit</Link>
-          </span>
-        )
-      }
-    }
-  ]
 
   public componentWillMount() {
     if (!this.state.users) {
@@ -84,11 +58,7 @@ export default class ListUsersAdminPage extends React.Component<ListUsersAdminPa
             </Typography.Text>
             <div style={{marginTop: '2em'}} />
 
-            <Table
-              loading={this.state.loading}
-              columns={this.columns}
-              dataSource={this.state.users}
-            />
+            <TableUsers loading={this.state.loading} users={this.state.users} />
             
           </div>
         </Content>

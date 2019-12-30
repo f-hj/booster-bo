@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb, Icon, Avatar } from "antd";
+import { Layout, Menu, Breadcrumb, Icon, Avatar, Select, Typography } from "antd";
 import {
   Switch,
   Route,
@@ -19,6 +19,12 @@ import { observer } from 'mobx-react'
 import ListBrandsAdminPage from "../pages/Admin/ListBrands";
 import ListUsersAdminPage from "../pages/Admin/ListUsers";
 import { AnimatedSwitch } from 'react-router-transition'
+import store from "./Store";
+import WelcomePage from "../pages/Welcome";
+import UserInfoPage from "../pages/Admin/InfoUser";
+import ListProductsPage from "../pages/Product/Products";
+import AddProductPage from "../pages/Product/AddProduct";
+import ProductInfoPage from "../pages/Product/Info";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -32,21 +38,29 @@ function mapStyles(styles: any) {
   };
 }
 
-// child matches will...
-const bounceTransition = {
-  // start in a transparent, upscaled state
+const translationTransition = {
   atEnter: {
     offset: -4,
     opacity: 0,
   },
-  // leave in a transparent, downscaled state
   atLeave: {
     offset: 4,
     opacity: 0,
   },
-  // and rest at an opaque, normally-scaled state
   atActive: {
     offset: 0,
+    opacity: 1,
+  },
+};
+
+const opacityTransition = {
+  atEnter: {
+    opacity: 0,
+  },
+  atLeave: {
+    opacity: 0,
+  },
+  atActive: {
     opacity: 1,
   },
 };
@@ -56,10 +70,16 @@ export default class App extends React.Component {
   render() {
     return (
       <Router>
-        <Switch>
+        <AnimatedSwitch
+            atEnter={opacityTransition.atEnter}
+            atLeave={opacityTransition.atLeave}
+            atActive={opacityTransition.atActive}
+            mapStyles={mapStyles}
+            className="route-wrapper"
+          >
           <Route path="/login" component={Login} />
           <Route path="/" component={Sidebar} />
-        </Switch>
+        </AnimatedSwitch>
       </Router>
     );
   }
@@ -102,7 +122,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     const regex = /[aeiouy]/gi
     const name = Store.user?.name
     if (!name) {
-      return '?'
+      return ''
     }
 
     const vowels = name.match(regex)
@@ -125,7 +145,20 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   render() {
     return (
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider theme="dark" collapsed={true}>
+        <Sider
+          theme="dark"
+          style={{
+            backgroundImage: 'linear-gradient(to top, #f43b47 0%, #453a94 100%)',
+          }}
+          collapsed={true}
+        >
+          <Typography.Title
+            style={{
+              margin: '0.4em auto',
+              color: 'white',
+              writingMode: 'vertical-lr',
+            }}
+          >Booster</Typography.Title>
           <Menu
             theme="dark"
             defaultSelectedKeys={this.splitPath(this.props.location.pathname)}
@@ -155,7 +188,11 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                         backgroundColor: "#333"
                       }}
                     >
-                      {this.getAvatarName().toUpperCase()}
+                      {
+                        this.getAvatarName() === '' ?
+                          <Icon type="loading" />
+                        : this.getAvatarName().toUpperCase()
+                      }
                     </Avatar>
                   </i>
                   <span>Account</span>
@@ -198,23 +235,63 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             defaultOpenKeys={this.splitPath(this.props.location.pathname)}
             mode="inline"
           >
-            <div className="logo" />
-            <Menu.Item key="/dashboard">
+            <div
+              style={{
+                width: '100%',
+                padding: '0.8em 0.4em'
+              }}
+            >
+              <Select
+                style={{
+                  width: '100%',
+                }}
+                placeholder="Select a brand"
+                onSelect={(e: string) => store.currentBrandId = e}
+                value={store.currentBrandId}
+              >
+                {
+                  store.user?.brands?.map((brand) => {
+                    return (
+                      <Select.Option value={brand.id}>{brand.name}</Select.Option>
+                    )
+                  })
+                }
+              </Select>
+            </div>
+            <Menu.Item
+              key="/dashboard"
+              disabled={!store.currentBrandId}
+            >
               <Link to="/dashboard">
                 <Icon type="dashboard" />
                 <span>Dashboard</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="/brand/info">
-              <Link to="/brand/info">
+            <Menu.Item
+              key="/brand/info"
+              disabled={!store.currentBrandId}
+            >
+              <Link to={`/brand/info?brand=${store.currentBrandId}`}>
                 <Icon type="form" />
                 <span>Brand info</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="/brand/products">
-              <Link to="/brand/products">
-                <Icon type="desktop" />
+            <Menu.Item
+              key="/brand/products"
+              disabled={!store.currentBrandId}
+            >
+              <Link to={`/brand/products?brand=${store.currentBrandId}`}>
+                <Icon type="tags" />
                 <span>Products</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item
+              key="/brand/orders"
+              disabled={!store.currentBrandId}
+            >
+              <Link to="/brand/orders">
+                <Icon type="shopping-cart" />
+                <span>Orders</span>
               </Link>
             </Menu.Item>
 
@@ -272,14 +349,18 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           </Menu>
         </Sider>
         <Layout>
-          <AnimatedSwitch
-    atEnter={bounceTransition.atEnter}
-    atLeave={bounceTransition.atLeave}
-    atActive={bounceTransition.atActive}
-    mapStyles={mapStyles}
-    className="route-wrapper"
-  >
-            <Route path="/brand/info/:brandId" component={BrandInfoPage} />
+        <AnimatedSwitch
+            atEnter={translationTransition.atEnter}
+            atLeave={translationTransition.atLeave}
+            atActive={translationTransition.atActive}
+            mapStyles={mapStyles}
+            className="route-wrapper"
+          >
+            <Route exact path="/" component={WelcomePage} />
+            <Route exact path="/brand/info" component={BrandInfoPage} />
+            <Route exact path="/brand/products" component={ListProductsPage} />
+            <Route exact path="/brand/products/add" component={AddProductPage} />
+            <Route exact path="/brand/products/product" component={ProductInfoPage} />
             <Route path="/dashboard" component={Dashboard} />
             <Route
               path="/admin/registerbrand"
@@ -296,6 +377,10 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             <Route
               path="/admin/listusers"
               component={ListUsersAdminPage}
+            />
+            <Route
+              path="/admin/users/:userId"
+              component={UserInfoPage}
             />
             <Route path="/" component={ErrorPage} />
           </AnimatedSwitch>
