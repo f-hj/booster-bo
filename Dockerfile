@@ -6,8 +6,10 @@ COPY yarn.lock .
 
 # add credentials on build
 ARG BOOSTER_JS_PULL_KEY
-RUN mkdir /root/.ssh/
-RUN echo "${BOOSTER_JS_PULL_KEY}" > /root/.ssh/id_rsa
+RUN mkdir /root/.ssh/ && \
+  echo "${BOOSTER_JS_PULL_KEY}" > /root/.ssh/id_rsa && \
+  chmod 600 /root/.ssh/id_rsa && \
+  ssh-keyscan github.com > /root/.ssh/known_hosts
 
 RUN yarn
 
