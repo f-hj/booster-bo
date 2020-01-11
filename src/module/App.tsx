@@ -25,7 +25,7 @@ import UserInfoPage from "../pages/Admin/InfoUser";
 import ListProductsPage from "../pages/Product/Products";
 import AddProductPage from "../pages/Product/AddProduct";
 import ProductInfoPage from "../pages/Product/Info";
-import Snowfall from "react-snowfall";
+import UserAvatar from "../components/AvatarUser";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -117,30 +117,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     }
 
     return endPaths;
-  };
-
-  getAvatarName = () => {
-    const regex = /[aeiouy]/gi
-    const name = Store.user?.name
-    if (!name) {
-      return ''
-    }
-
-    const vowels = name.match(regex)
-    if (!vowels) {
-      return name.substr(0, 3)
-    }
-    
-    let l = name.indexOf(vowels[0])
-    if (l > 3) {
-      return name.substr(0, 3)
-    }
-    const l2 = name.indexOf(vowels[1])
-    if (l == 0 && l2 < 3) {
-      l = l2
-    }
-
-    return name.substr(0, l + 1)
   }
 
   render() {
@@ -153,7 +129,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           }}
           collapsed={true}
         >
-          <Snowfall snowflakeCount={20} />
           <Typography.Title
             style={{
               margin: '0.4em auto',
@@ -181,21 +156,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   }}
                 >
                   <i className="anticon">
-                    {" "}
-                    <Avatar
-                      size={36}
-                      style={{
-                        fontSize: "30",
-                        color: "#fffff",
-                        backgroundColor: "#333"
-                      }}
-                    >
-                      {
-                        this.getAvatarName() === '' ?
-                          <Icon type="loading" />
-                        : this.getAvatarName().toUpperCase()
-                      }
-                    </Avatar>
+                    <UserAvatar user={Store.user} />
                   </i>
                   <span>Account</span>
                 </div>

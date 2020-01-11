@@ -18,6 +18,7 @@ interface UserInfoPageState {
   loading: boolean
   user?: User
   logs?: Log[]
+  history?: Log[]
 
   modalAddUser: boolean
   addUserLoading: boolean
@@ -45,6 +46,13 @@ export default class UserInfoPage extends React.Component<UserInfoPageProps, Use
       })
       .finally(() => {
         this.setState({ loading: false })
+      })
+
+    store.api.users.getUserLogs(this.props.match.params.userId)
+      .then(res => {
+        this.setState({
+          history: res.data.logs,
+        })
       })
   }
 
@@ -88,6 +96,10 @@ export default class UserInfoPage extends React.Component<UserInfoPageProps, Use
           <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
             <Typography.Title level={4}>Timeline</Typography.Title>
             <LogTimeline logs={this.state.logs} />
+          </div>
+          <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
+            <Typography.Title level={4}>History</Typography.Title>
+            <LogTimeline logs={this.state.history} full={true} />
           </div>
 
           {

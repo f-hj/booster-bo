@@ -2499,9 +2499,9 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-"booster-js-client@git+ssh://git@github.com:f-hj/booster-js-client.git#504ba2b903573150e398c0c16200ef6db8cd9012":
+"booster-js-client@git+ssh://git@github.com:f-hj/booster-js-client.git#ff59d7e487d1a7e7b2445cbc47e3ba9f3dc8f969":
   version "1.0.0"
-  resolved "git+ssh://git@github.com:f-hj/booster-js-client.git#504ba2b903573150e398c0c16200ef6db8cd9012"
+  resolved "git+ssh://git@github.com:f-hj/booster-js-client.git#ff59d7e487d1a7e7b2445cbc47e3ba9f3dc8f969"
   dependencies:
     axios "^0.18.0"
 
@@ -9577,11 +9577,6 @@ react-slick@~0.25.2:
     json2mq "^0.2.0"
     lodash.debounce "^4.0.8"
     resize-observer-polyfill "^1.5.0"
-
-react-snowfall@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-snowfall/-/react-snowfall-1.0.2.tgz#cafdeacea28638ea710687f101ec4c8e92550e9c"
-  integrity sha512-wmKa7Vhl26Ixo5hBp3lgM9z7o43itLv7LF7IuuD0vZPh3TclfM2wokujQb/gg5Ml2c6r6hyU7WXmvMg63TkhtA==
 
 react@^16.12.0:
   version "16.12.0"

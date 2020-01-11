@@ -88,6 +88,7 @@ export default class BrandInfoPage extends React.Component<BrandInfoPageProps, B
             <Button
               onClick={() => this.setState({ modalAddUser: true })}
               loading={this.state.addUserLoading}
+              type="primary"
             >
               <Icon type="plus" />
               Invite user

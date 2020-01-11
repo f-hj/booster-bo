@@ -1,16 +1,18 @@
 import { action, computed, observable } from 'mobx'
-import { UsersApi, BrandsApi, Configuration, User, Brand, ProductsApi } from 'booster-js-client'
+import { UsersApi, BrandsApi, Configuration, User, Brand, ProductsApi, ImagesApi } from 'booster-js-client'
 
 class ApiSet {
   brands: BrandsApi
   users: UsersApi
   products: ProductsApi
+  images: ImagesApi
 
   constructor () {
     // init with empty config to avoid nullable types
     this.brands = new BrandsApi()
     this.users = new UsersApi()
     this.products = new ProductsApi()
+    this.images = new ImagesApi()
 
     // then with re-initable parameters
     this.init()
@@ -23,6 +25,7 @@ class ApiSet {
     this.brands = new BrandsApi(config)
     this.users = new UsersApi(config)
     this.products = new ProductsApi(config)
+    this.images = new ImagesApi(config)
   }
 }
 

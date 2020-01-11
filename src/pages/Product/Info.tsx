@@ -1,13 +1,15 @@
 import React from 'react'
-import { Layout, Menu, Breadcrumb, Icon, Typography, notification, Skeleton, Button, Timeline } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Typography, notification, Skeleton, Button, Timeline, Card, Row, Col } from 'antd';
 import { RouteComponentProps } from 'react-router-dom';
 import { Product, Log } from 'booster-js-client';
 import store from '../../module/Store';
-import ModalAddUser from '../../components/ModalAddUser';
+import ModalAddImage from '../../components/ModalAddImage';
 import TableUsers from '../../components/TableUsers';
 import LogItem from '../../components/LogTimeline';
 import LogTimeline from '../../components/LogTimeline';
 import queryString from 'query-string'
+import SpanId from '../../components/SpanId';
+import ImageProduct from '../../components/ImageProduct';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -18,11 +20,14 @@ interface ProductInfoPageState {
   loading: boolean
   product?: Product
   logs?: Log[]
+
+  modalAddImage: boolean
 }
 
 export default class ProductInfoPage extends React.Component<ProductInfoPageProps, ProductInfoPageState> {
   public state: ProductInfoPageState = {
     loading: true,
+    modalAddImage: false,
   }
 
   async componentWillMount () {
@@ -75,6 +80,29 @@ export default class ProductInfoPage extends React.Component<ProductInfoPageProp
             <Typography.Paragraph editable={true}>{this.state.product?.description}</Typography.Paragraph>
           </div>
           <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
+            <Typography.Title level={4}>Images</Typography.Title>
+            <Row gutter={[16, 16]}>
+            {
+              this.state.product?.images?.map((img) => {
+                return (
+                  <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 10 }} xxl={{ span: 4}}>
+                    <ImageProduct image={img} />
+                  </Col>
+                )
+              })
+            }
+            </Row>
+            <p></p>
+            <Button
+              type="primary"
+              onClick={() => {
+                this.setState({ modalAddImage: true })
+              }}
+            >
+              <Icon type="plus" />Add an image
+            </Button>
+          </div>
+          <div style={{ padding: 24, marginBottom: 12, background: '#fff' }}>
             <Typography.Title level={4}>Models</Typography.Title>
             <p></p>
           </div>
@@ -100,6 +128,15 @@ export default class ProductInfoPage extends React.Component<ProductInfoPageProp
             : null
           }
         </Content>
+
+        <ModalAddImage
+          visible={this.state.modalAddImage}
+          onSubmit={() => {
+            this.setState({ modalAddImage: false })
+          }}
+          onCancel={() => this.setState({ modalAddImage: false })}
+          product={this.state.product!}
+        />
       </div>
     )
   }
